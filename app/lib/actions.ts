@@ -1,6 +1,6 @@
 'use server';
 // import { sql } from '@vercel/postgres'
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import {z} from 'zod';
@@ -50,7 +50,7 @@ export async function createEntry(prevState: {
     score: formData.get('score'),
     sentiment: formData.get('sentiment')
   });
-  console.log(validatedFormData)
+
 
   if (!validatedFormData.success) {
     return {
@@ -72,9 +72,20 @@ export async function createEntry(prevState: {
       message: 'Database Error: Failed to create record.'
     }
   }
-  console.log('in server action',formData);
   revalidatePath('/home')
-  redirect('/home')
-  
-  return { message: `Added entry to the DB on :${date} ` };
+  return { message: 'The record was successully added to the DB.'}
+}
+
+export async function fetchRecords() {
+  unstable_noStore()
+  try {
+    const data = await sql`
+      SELECT *
+      FROM searches;`
+
+    return data;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest invoices.');
+  }
 }

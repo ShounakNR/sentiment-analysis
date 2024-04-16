@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from 'clsx'
+import Dropdown from "./dropdown";
 
 const navItems = [
   {
@@ -24,21 +25,7 @@ export function NavLinks() {
   })
   return (
     <div className="flex flex-col float-center w-1/2 mt-16 ">
-      {navItems.map((link) => {
-        const activeClass = clsx(
-          {'text-slate-600': pathName === link.route}
-        )
-        return (
-          <Link
-            key={link.name}
-            href={link.route}
-            // as={link.route}
-            className={"p-2 text-sm font-medium justify-start text-slate-900"}
-          >
-            <span className={`hidden md:block font-serif text-m hover:text-slate-400 focus ${activeClass} uppercase`}>{link.name}</span>
-          </Link>
-        );
-      })}
+      <Dropdown options = {navItems}/>
     </div>
 
   )
