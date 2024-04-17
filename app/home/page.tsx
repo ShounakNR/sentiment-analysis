@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createEntry } from "../lib/actions";
 import { useFormState } from "react-dom";
 
@@ -50,6 +50,28 @@ export default function HomePage() {
     }
   }
 
+  const renderSVG = () => {
+    if(result[0]['label']){
+      switch (result[0]['label']) {
+        case 'Positive':
+          return(
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#33cc33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" className="feather feather-smile"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+          )
+        case 'Negative':
+          return(
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cc0000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" className="feather feather-frown"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+          )
+        case 'Neutral':
+            return(
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" className="feather feather-meh"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            )
+        default:
+          return;
+      }
+    }
+  }
+
+
   return(
     <main className="flex min-h-screen flex-col items-center justify-center p-12 lg:w-full">
       <h1 className="text-5xl font-bold mb-2 text-center text-slate-900">Hello, Dani</h1>
@@ -88,16 +110,17 @@ export default function HomePage() {
       </form>
 
       {ready !== null && (
-        <pre className="bg-gray-100 mt-2 p-2 rounded text-slate-900">
+        <pre className="bg-gray-100 mt-2 p-2 rounded text-slate-900 items-center flex flex-col">
           {
             (!ready || !result) ? 'Loading...' : `The Sentiment is : ${result[0]['label']}`}
+          {renderSVG()}
         </pre>
       )}
-      {state !== null && (
+      {state !== null && state.message !== '' && (
         <pre className="bg-gray-100 mt-2 p-2 rounded text-slate-900">
           {state?.message}
         </pre>
       )}
     </main>
   )
-}
+} 
